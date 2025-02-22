@@ -23,13 +23,13 @@ class GuidanceSelectorNode:
         if value >= 50:
             output = 1.5
         elif value >= 40:
-            output = 1.7
+            output = 1.8
         elif value >= 10:
-            output = 1.9
+            output = 2.0
         elif value >= 5.5:
-            output = 2.2
+            output = 2.3
         elif value >= 4:
-            output = 2.7
+            output = 2.8
         else:
             output = 2.9
         return (output,)
