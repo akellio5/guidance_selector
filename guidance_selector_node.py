@@ -1,5 +1,3 @@
-import comfy
-
 class GuidanceSelectorNode:
     @classmethod
     def INPUT_TYPES(cls):
@@ -21,21 +19,26 @@ class GuidanceSelectorNode:
     def calculate_guidance(self, guidance_value):
         value = max(0.0, min(100.0, guidance_value))
         
+        # Сегменты для интерполяции (x_high, y_high, x_low, y_low)
+        segments = [
+            (50.0, 1.5, 40.0, 1.7),
+            (40.0, 1.7, 10.0, 1.9),
+            (10.0, 1.9, 5.5, 2.2),
+            (5.5, 2.2, 4.0, 3.2),
+            (4.0, 3.2, 2.0, 3.7),
+        ]
 
-        if value >= 50:
+        if value >= 50.0:
             output_float = 1.5
-        elif value >= 40:
-            output_float = 1.7
-        elif value >= 10:
-            output_float = 1.9
-        elif value >= 5.5:
-            output_float = 2.2
-        elif value >= 4:
-            output_float = 3.2
-        elif value >= 2:
-            output_float = 3.7
+        elif value < 2.0:
+            output_float = 5.0
         else:
-            output_float = 5
+            for x_high, y_high, x_low, y_low in segments:
+                if x_low <= value < x_high:
+                    slope = (y_low - y_high) / (x_low - x_high)
+                    output_float = y_high + slope * (value - x_high)
+                    break
+            output_float = round(output_float, 1)
 
         output_bool = value < 4.0
 
